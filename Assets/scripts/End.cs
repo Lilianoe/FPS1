@@ -1,36 +1,36 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // Nécessaire pour charger des scènes
-using UnityEngine.UI; // Nécessaire pour afficher du texte
+using UnityEngine.UI; 
 
 public class End : MonoBehaviour
 {
-    public Text endText; // Référence au texte à afficher
-    public string mainMenuSceneName = "MainMenu"; // Nom de la scène du menu principal
+    public Text endText; 
+    public string mainMenuSceneName = "MainMenu"; 
 
     private void Start()
     {
         if (endText != null)
         {
-            endText.gameObject.SetActive(false); // Masquer le texte au début
+            endText.gameObject.SetActive(false); 
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) // Vérifier si c'est le joueur qui entre en collision
+        if (other.CompareTag("Player"))
         {
             if (endText != null)
             {
-                endText.gameObject.SetActive(true); // Afficher le texte
+                endText.gameObject.SetActive(true); 
             }
 
-            // Retourner au menu principal après 5 secondes
-            Invoke("ReturnToMainMenu", 3f);
+
+            Invoke("ReturnToMainMenu", 2f);
         }
     }
 
     private void ReturnToMainMenu()
     {
-        SceneManager.LoadScene(mainMenuSceneName); // Charger la scène du menu principal
+        SceneManager.LoadScene(mainMenuSceneName); 
     }
 }

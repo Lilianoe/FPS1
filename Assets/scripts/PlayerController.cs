@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private bool groundedPlayer;
     private DamageEffect damageEffect;
-    
+
 
     private void Start()
     {
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         groundedPlayer = _controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
-            playerVelocity.y = -1f; 
+            playerVelocity.y = -1f;
         }
 
         // Déplacement
@@ -67,11 +67,10 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         _controller.Move(playerVelocity * Time.deltaTime);
 
-        //tentative de créer une barre de vie
         //health = Mathf.Clamp(health, 0, 100);
         //UpdateHealthUI(); 
 
-        // Respawn si perso tombe dans le vide
+        // Respawn 
         if (transform.position.y < -10f)
         {
             Respawn();
@@ -80,37 +79,33 @@ public class PlayerController : MonoBehaviour
 
     private void Respawn()
     {
-        _controller.enabled = false; // Désactiver le CharacterController
-        transform.position = new Vector3(0, 4, 0); // Position de respawn
-        playerVelocity = Vector3.zero; // reintialiser la velocité
-        _controller.enabled = true; // Réactiver le CharacterController
-        health = 100f; // Réinitialiser la santé
+        _controller.enabled = false;
+        transform.position = new Vector3(0, 4, 0);
+        playerVelocity = Vector3.zero;
+        _controller.enabled = true;
+        health = 100f;
         groundedPlayer = _controller.isGrounded;
     }
-public void TakeDamage(float amount)
-{
-    health -= amount;
-    Debug.Log("Vous avez pris des degats, votre vie est a: " + health);
-    
-    UI.instance.healthSlider.value = health;
-    UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
 
-    //tentative de créer un effet de degat sur notre perso en utilisant la vignette EPIC FAIL JPPPPPPPPPP JE VAIS ME TIRERT UNE BALLE
-    
-    if (damageEffect != null)
+    public void TakeDamage(float amount)
     {
-        StartCoroutine(damageEffect.TakeDamageEffect()); // Intensifier l'effet de vignette
-    }
+        health -= amount;
+        Debug.Log("Vous avez pris des degats, votre vie est a: " + health);
 
-    if (health <= 0)
-    {
-        Debug.Log("Vous etes mort !");
-        Respawn(); 
+        UI.instance.healthSlider.value = health;
+        UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
+
+        //tentative de créer un effet de degat sur notre perso en utilisant la vignette EPIC FAIL JPPPPPPPPPP JE VAIS ME TIRERT UNE BALLE
+
+        if (damageEffect != null)
+        {
+            StartCoroutine(damageEffect.TakeDamageEffect()); // Intensifier l'effet de vignette
+        }
+
+        if (health <= 0)
+        {
+            Debug.Log("Vous etes mort !");
+            Respawn();
+        }
     }
-    //else 
-    //{
-        // Mettre à jour la barre de vie
-        //healthBar.UpdateHealthbar(maxHealth, health); // Mettre à jour la barre de vie
-    //}
-}
 }

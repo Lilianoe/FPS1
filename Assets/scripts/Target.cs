@@ -40,6 +40,18 @@ public class Target : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void HealPlayer(int heal)
+    {
+        _currentHealth += heal;
+
+        if (_currentHealth > MaxHealth)
+        {
+            _currentHealth = MaxHealth;
+        }
+        UI.instance.healthSlider.value = _currentHealth;
+        UI.instance.healthText.text = "HEALTH"+_currentHealth + "/" + MaxHealth;
+    }
+
     private void Update()
     {
         //attaque contre notre perso
