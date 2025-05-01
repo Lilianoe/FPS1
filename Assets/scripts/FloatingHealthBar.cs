@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class FloatingHealthBar : MonoBehaviour
 {
     [SerializeField] private Slider slider;
-    [SerializeField] private Camera camera;
+    [SerializeField] private Camera mycamera;
     [SerializeField] private Transform target;
 
     public void UpdateHealthBar(float _currentHealth, float MaxHealth)

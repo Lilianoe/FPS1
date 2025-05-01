@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 20f;
     public float jumpHeight = 1f;
     public GameObject playerHead;
-    private float gravityValue = -18f;
+    private float gravityValue = -5f;
     public float health = 100f;
     public float maxHealth = 100f;
 
@@ -24,9 +24,9 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         health = maxHealth;
-        UI.instance.healthSlider.maxValue = maxHealth;
-        UI.instance.healthSlider.value = health;
-        UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
+        // UI.instance.healthSlider.maxValue = maxHealth;
+        // UI.instance.healthSlider.value = health;
+        // UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
     }
 
     private void Awake()
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
     private void Respawn()
     {
         _controller.enabled = false;
-        transform.position = new Vector3(0, 4, 0);
+        transform.position = new Vector3(-4, 1, 0);
         playerVelocity = Vector3.zero;
         _controller.enabled = true;
         health = 100f;
