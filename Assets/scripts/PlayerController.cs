@@ -8,9 +8,10 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 20f;
     public float jumpHeight = 1f;
     public GameObject playerHead;
-    private float gravityValue = -5f;
+    private float gravityValue = -7f;
     public float health = 100f;
     public float maxHealth = 100f;
+    public Vector3 lastCheckpointPosition = new Vector3(-4, 1, 0); 
 
     private CharacterController _controller;
     private Vector3 playerVelocity;
@@ -71,41 +72,7 @@ public class PlayerController : MonoBehaviour
         //UpdateHealthUI(); 
 
         // Respawn 
-        if (transform.position.y < -10f)
-        {
-            Respawn();
-        }
-    }
-
-    private void Respawn()
-    {
-        _controller.enabled = false;
-        transform.position = new Vector3(-4, 1, 0);
-        playerVelocity = Vector3.zero;
-        _controller.enabled = true;
-        health = 100f;
-        groundedPlayer = _controller.isGrounded;
-    }
-
-    public void TakeDamage(float amount)
-    {
-        health -= amount;
-        Debug.Log("Vous avez pris des degats, votre vie est a: " + health);
-
-        UI.instance.healthSlider.value = health;
-        UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
-
-        //tentative de créer un effet de degat sur notre perso en utilisant la vignette EPIC FAIL JPPPPPPPPPP JE VAIS ME TIRERT UNE BALLE
-
-        if (damageEffect != null)
-        {
-            StartCoroutine(damageEffect.TakeDamageEffect()); // Intensifier l'effet de vignette
-        }
-
-        if (health <= 0)
-        {
-            Debug.Log("Vous etes mort !");
-            Respawn();
-        }
     }
 }
+
+

@@ -65,11 +65,15 @@ public class Target : MonoBehaviour
 
     void AttackPlayer()
 {
-    PlayerController player = Object.FindAnyObjectByType<PlayerController>();
-    if (player != null)
+    PlayerHealth playerHealth = Object.FindAnyObjectByType<PlayerHealth>(); // Trouve le composant PlayerHealth
+    if (playerHealth != null)
     {
-        player.TakeDamage(damageToPlayer); //inflige les degats
-        Debug.Log("Vous etes attaqué par un ennemis");
+        playerHealth.TakeDamage(damageToPlayer); // Inflige les dégâts
+        Debug.Log("Vous êtes attaqué par un ennemi");
+    }
+    else
+    {
+        Debug.LogError("PlayerHealth introuvable !");
     }
 }
 }
