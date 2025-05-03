@@ -1,10 +1,20 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TargetSpawn : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemyPrefabs; // Tableau de préfabriqués d'ennemis
     [SerializeField] private Transform[] spawnPoints; // Tableau de points d'apparition
     private bool hasSpawned = false; // Empêche de réapparaître plusieurs fois
+
+    private void Start()
+    {
+        // Désactive tous les ennemis originaux au démarrage
+        foreach (GameObject enemy in enemyPrefabs)
+        {
+            enemy.SetActive(false); // Désactive les GameObjects originaux
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -20,11 +30,13 @@ public class TargetSpawn : MonoBehaviour
                 return;
             }
 
-            // Instancie chaque ennemi à son point d'apparition
+            // Téléporte chaque ennemi à son point d'apparition
             for (int i = 0; i < enemyPrefabs.Length; i++)
             {
-                Instantiate(enemyPrefabs[i], spawnPoints[i].position, spawnPoints[i].rotation);
-                Debug.Log($"Ennemi {i + 1} apparu !");
+                enemyPrefabs[i].transform.position = spawnPoints[i].position; // Téléporte l'ennemi
+                enemyPrefabs[i].transform.rotation = spawnPoints[i].rotation; // Met à jour la rotation
+                enemyPrefabs[i].SetActive(true); // Active l'ennemi
+                Debug.Log($"Ennemi {i + 1} téléporté à {spawnPoints[i].position}");
             }
         }
     }

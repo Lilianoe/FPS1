@@ -1,60 +1,32 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Target : MonoBehaviour
-
 {
     public float health = 100f;
-    public float damageToPlayer = 10f; 
-    public float attackInterval = 2f; 
-    public int StartHealth = 100;
-    private int _currentHealth;
-    private int MaxHealth = 100;
+    public float damageToPlayer = 10f;
+    public float attackInterval = 2f;
+    public float attackRange = 5f; // Distance maximale pour attaquer le joueur
 
     private float attackTimer = 0f;
-    [SerializeField] FloatingHealthBar healthbar;
-    
-    private void Awake()
-    {
-        healthbar = GetComponentInChildren<FloatingHealthBar>();
-    }
-    
+    private Transform playerTransform;
+
     private void Start()
     {
-        _currentHealth = StartHealth;
-        healthbar.UpdateHealthBar(health, MaxHealth);
-    }
-
-    public void TakeDamage(float amount)
-    {
-        health -= amount;
-        healthbar.UpdateHealthBar(health, MaxHealth);
-        if (health <= 0)
+        // Trouve le joueur dans la scène
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            Die();
+            playerTransform = player.transform;
         }
-    }
-
-    void Die()
-    {
-        Destroy(gameObject);
-    }
-
-    public void HealPlayer(int heal)
-    {
-        _currentHealth += heal;
-
-        if (_currentHealth > MaxHealth)
+        else
         {
-            _currentHealth = MaxHealth;
+            Debug.LogError("Player introuvable !");
         }
-        UI.instance.healthSlider.value = _currentHealth;
-        UI.instance.healthText.text = "HEALTH"+_currentHealth + "/" + MaxHealth;
     }
 
     private void Update()
     {
-        //attaque contre notre perso
+        // Attaque contre notre perso
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackInterval)
         {
@@ -64,16 +36,43 @@ public class Target : MonoBehaviour
     }
 
     void AttackPlayer()
-{
-    PlayerHealth playerHealth = Object.FindAnyObjectByType<PlayerHealth>(); // Trouve le composant PlayerHealth
-    if (playerHealth != null)
     {
-        playerHealth.TakeDamage(damageToPlayer); // Inflige les dégâts
-        Debug.Log("Vous êtes attaqué par un ennemi");
+        if (playerTransform != null)
+        {
+            // Vérifie si le joueur est dans la portée d'attaque
+            float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
+            Debug.Log($"[{gameObject.name}] Distance au joueur : {distanceToPlayer}");
+
+            if (distanceToPlayer <= attackRange)
+            {
+                PlayerHealth playerHealth = playerTransform.GetComponent<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    playerHealth.TakeDamage((int)damageToPlayer); // Convertit le float en int
+                    Debug.Log($"[{gameObject.name}] Vous êtes attaqué par un ennemi !");
+                }
+            }
+            else
+            {
+                Debug.Log($"[{gameObject.name}] Le joueur est hors de portée !");
+            }
+        }
     }
-    else
+    // Méthode pour infliger des dégâts à l'ennemi
+    public void TakeDamage(float amount)
+{
+    health -= amount; // Réduit la santé de l'ennemi
+    Debug.Log($"Ennemi touché ! Santé restante : {health}");
+
+    if (health <= 0)
     {
-        Debug.LogError("PlayerHealth introuvable !");
+        Die();
     }
 }
+
+    void Die()
+    {
+        Debug.Log("Ennemi détruit !");
+        Destroy(gameObject); // Détruit l'ennemi
+    }
 }

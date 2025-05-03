@@ -2,33 +2,33 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public float health = 100f;
-    public float maxHealth = 100f;
-    private DamageEffect damageEffect;
+    public int maxHealth = 100; // Vie maximale du joueur
+    public int currentHealth; // Vie actuelle du joueur
 
-    private void Awake()
+    private void Start()
     {
-        damageEffect = GetComponent<DamageEffect>();
+        currentHealth = maxHealth; // Initialise la vie du joueur
     }
 
-    public void TakeDamage(float amount)
+    public void Heal(int amount)
     {
-        health -= amount;
-        Debug.Log("Vous avez pris des dégâts, votre vie est à : " + health);
-
-        UI.instance.healthSlider.value = health;
-        UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
-
-        if (damageEffect != null)
+        currentHealth += amount; // Ajoute la quantité de soin
+        if (currentHealth > maxHealth)
         {
-            StartCoroutine(damageEffect.TakeDamageEffect());
+            currentHealth = maxHealth; // Empêche de dépasser la vie maximale
         }
 
-        if (health <= 0)
+        Debug.Log($"Vie actuelle du joueur : {currentHealth}/{maxHealth}");
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage; // Réduit la vie du joueur
+        if (currentHealth <= 0)
         {
-            Debug.Log("Vous êtes mort !");
-            GetComponent<BaseRespawn>().Respawn();
-            health = maxHealth;
+            currentHealth = 0;
+            Debug.Log("Le joueur est mort !");
+            // Ajoutez ici la logique pour gérer la mort du joueur
         }
     }
 }
