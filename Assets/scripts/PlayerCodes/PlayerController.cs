@@ -18,16 +18,13 @@ public class PlayerController : MonoBehaviour
     private bool groundedPlayer;
     private DamageEffect damageEffect;
 
-
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         health = maxHealth;
-        // UI.instance.healthSlider.maxValue = maxHealth;
-        // UI.instance.healthSlider.value = health;
-        // UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
+
     }
 
     private void Awake()
@@ -68,11 +65,54 @@ public class PlayerController : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         _controller.Move(playerVelocity * Time.deltaTime);
 
-        //health = Mathf.Clamp(health, 0, 100);
-        //UpdateHealthUI(); 
+        health = Mathf.Clamp(health, 0, maxHealth);
 
-        // Respawn 
+        // Met à jour la barre de vie via le script UI
+        if (UI.instance != null)
+        {
+            UI.instance.UpdateHealthBar(health, maxHealth);
+        }
+
+        // Respawn si nécessaire
+        if (health <= 0)
+        {
+            Respawn();
+        }
+    }
+
+        private void Respawn()
+    {
+        transform.position = lastCheckpointPosition; // Replace le joueur au dernier checkpoint
+        health = maxHealth; // Réinitialise la santé
+
+        // Met à jour la barre de vie via le script UI
+        if (UI.instance != null)
+        {
+            UI.instance.UpdateHealthBar(health, maxHealth);
+        }
+
+        Debug.Log("Le joueur a respawné !");
+    }
+
+    private void UpdateHealthUI()
+    {
+        if (UI.instance != null)
+        {
+            UI.instance.healthSlider.value = health;
+            UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
+        }
+        else
+        {
+            Debug.LogError("UI.instance est introuvable !");
+        }
+        if (UI.instance != null)
+        {
+            UI.instance.UpdateHealthBar(health, maxHealth);
+        }
+        else
+        {
+            Debug.LogError("UI.instance est introuvable !");
+        }
     }
 }
-
 

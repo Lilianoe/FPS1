@@ -5,19 +5,26 @@ public class OpenDoor : MonoBehaviour
     private bool LETMEINNNN = false;
     public GameObject DoorUp;
     public GameObject DoorDown;
+    private AudioSource audioSource; 
+
+    private bool hasPlayedOpenSound = false; 
+    private bool hasPlayedCloseSound = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>(); 
     }
+    
 
     void OnTriggerEnter(Collider other)
     {
             LETMEINNNN = true;
+            hasPlayedCloseSound = false; // Réinitialise l'état pour le son de fermeture
     }
     void OnTriggerExit(Collider other)
     {
          LETMEINNNN = false;
+         hasPlayedOpenSound = false; // Réinitialise l'état pour le son d'ouverture
 
     }
 
@@ -26,6 +33,12 @@ public class OpenDoor : MonoBehaviour
     {
         if(LETMEINNNN == true)
         {
+            if (!hasPlayedOpenSound) // Joue le son d'ouverture une seule fois
+            {
+                audioSource.Play();
+                hasPlayedOpenSound = true;
+            }
+
             if(DoorUp.transform.position.y <= 5.7f)
                 {
                     Debug.Log("Jesuis la 1");
@@ -40,7 +53,13 @@ public class OpenDoor : MonoBehaviour
         }
         else
         {
-            if(DoorUp.transform.position.y >= 4.0f)
+            if (!hasPlayedCloseSound) // Joue le son de fermeture une seule fois
+            {
+                audioSource.Play();
+                hasPlayedCloseSound = true;
+            }
+            
+            if (DoorUp.transform.position.y >= 4.0f)
                 {
                     Debug.Log("Jesuis la 2");
                     DoorUp.transform.position = new Vector3(DoorUp.transform.position.x, DoorUp.transform.position.y-0.05f, DoorUp.transform.position.z);
@@ -54,3 +73,4 @@ public class OpenDoor : MonoBehaviour
         }
     }
 }
+
