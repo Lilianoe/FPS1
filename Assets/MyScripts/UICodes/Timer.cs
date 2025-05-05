@@ -1,26 +1,30 @@
 using UnityEngine;
 using TMPro;
+
 public class Timer : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] float remainingTIme;
-    
+    public TextMeshProUGUI timerText;
+    public float remainingTime = 60f;
+    public GameOverMenu gameOverMenu; // Référence au script GameOverMenu
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (remainingTIme > 0)
+        if (remainingTime > 0)
         {
-            remainingTIme -= Time.deltaTime;
+            remainingTime -= Time.deltaTime;
         }
-        else if (remainingTIme < 0)
+        else if (remainingTime <= 0)
         {
-            remainingTIme = 0;
-            //respawn()
+            remainingTime = 0;
             timerText.color = Color.red;
+            if (gameOverMenu != null)
+            {
+                gameOverMenu.ShowGameOverMenu(); 
+            }
         }
-        int minutes = Mathf.FloorToInt(remainingTIme / 60);
-        int seconds = Mathf.FloorToInt(remainingTIme % 60);
+
+        int minutes = Mathf.FloorToInt(remainingTime / 60);
+        int seconds = Mathf.FloorToInt(remainingTime % 60);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }

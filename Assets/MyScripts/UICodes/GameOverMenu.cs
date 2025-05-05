@@ -8,7 +8,7 @@ public class GameOverMenu : MonoBehaviour
 
     void Start()
     {
-        gameOverMenu.SetActive(false); // Cache le menu Game Over au début
+        gameOverMenu.SetActive(false); 
     }
 
     public void ShowGameOverMenu()

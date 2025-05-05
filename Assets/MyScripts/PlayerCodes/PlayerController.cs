@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private float gravityValue = -7f;
     public float health = 100f;
     public float maxHealth = 100f;
-    public Vector3 lastCheckpointPosition = new Vector3(-4, 1, 0); 
+    public Vector3 lastCheckpointPosition = new Vector3(-4, 1, 0);
 
     private CharacterController _controller;
     private Vector3 playerVelocity;
@@ -24,7 +24,6 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         health = maxHealth;
-
     }
 
     private void Awake()
@@ -61,58 +60,18 @@ public class PlayerController : MonoBehaviour
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravityValue);
         }
 
-        // Gravite
+        // Gravité
         playerVelocity.y += gravityValue * Time.deltaTime;
         _controller.Move(playerVelocity * Time.deltaTime);
 
+        // Clamp de la santé
         health = Mathf.Clamp(health, 0, maxHealth);
-
-        // Met à jour la barre de vie via le script UI
-        if (UI.instance != null)
-        {
-            UI.instance.UpdateHealthBar(health, maxHealth);
-        }
-
-        // Respawn si nécessaire
-        if (health <= 0)
-        {
-            Respawn();
-        }
     }
 
-        private void Respawn()
+    private void Respawn()
     {
-        transform.position = lastCheckpointPosition; // Replace le joueur au dernier checkpoint
-        health = maxHealth; // Réinitialise la santé
-
-        // Met à jour la barre de vie via le script UI
-        if (UI.instance != null)
-        {
-            UI.instance.UpdateHealthBar(health, maxHealth);
-        }
-
-        Debug.Log("Le joueur a respawné !");
-    }
-
-    private void UpdateHealthUI()
-    {
-        if (UI.instance != null)
-        {
-            UI.instance.healthSlider.value = health;
-            UI.instance.healthText.text = "health: " + health + "/" + maxHealth;
-        }
-        else
-        {
-            Debug.LogError("UI.instance est introuvable !");
-        }
-        if (UI.instance != null)
-        {
-            UI.instance.UpdateHealthBar(health, maxHealth);
-        }
-        else
-        {
-            Debug.LogError("UI.instance est introuvable !");
-        }
+        transform.position = lastCheckpointPosition;
+        health = maxHealth;
     }
 }
 
